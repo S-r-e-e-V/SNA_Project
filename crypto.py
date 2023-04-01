@@ -3,74 +3,104 @@ import pandas as pd
 import datetime
 import matplotlib.pyplot as plt
 
-public_client = cbpro.PublicClient()
+def getEmotionColor(string):
+    if string=="Happy":
+        return "green"
+    elif string=="Sad":
+        return "red"
+        
+
+def getCryptoData():
+    public_client = cbpro.PublicClient()
+    start_date = datetime.datetime(2022, 1, 1)
+    end_date = datetime.datetime(2022, 5, 1)
+    delta = pd.Timedelta('1 day')
+    dates = pd.date_range(start_date, end_date, freq=delta).to_pydatetime().tolist()
+    # print(public_client.get_product_historic_rates("BTC-USD"));
+    df = pd.DataFrame(public_client.get_product_historic_rates(
+        'ETH-USDT',start=start_date,end=end_date,granularity=86400
+    ))
+
+    # df = pd.DataFrame(public_client.get_product_historic_rates(
+    #     'BTC-USD', 
+    #     start_date, 
+    #     end_date,
+    #     granularity=86400  # 1 day
+    # ))
+
+    df.columns = ['time', 'low', 'high', 'open', 'close', 'volume']
+    df['time'] = pd.to_datetime(df['time'], unit='s')
+    df = df.set_index('time')
+    df1 = pd.DataFrame(public_client.get_product_historic_rates(
+        'BTC-USDT',start=start_date,end=end_date,granularity=86400
+    ))
+    # df1 = pd.DataFrame(public_client.get_product_historic_rates(
+    #     'BTC-USD', 
+    #     start_date, 
+    #     end_date,
+    #     granularity=86400  # 1 day
+    # ))
+
+    df1.columns = ['time', 'low', 'high', 'open', 'close', 'volume']
+    df1['time'] = pd.to_datetime(df1['time'], unit='s')
+    df1 = df1.set_index('time')
+    return df, df1
+
+def getEmotionsChart(df,df1,array):
+
+    # Create a figure and an axis object
+    fig, (ax1,ax2) = plt.subplots(1,2,figsize=(25,6), sharex=True)
+
+    # Plot the data on the axis object
+    ax1.plot(df['close'])
+    ax1.set_title('ETH-USDT')
+    ax1.set_xlabel('Date')
+    ax1.set_ylabel('Price (USD)')
+    # ax1.set_xticklabels(df['Date'], rotation=45)
+    ax1.legend(loc="upper right")
+
+    for i in array:
+        if i["crypto_coin"]=="ETH":
+            ax1.axvspan(i["start_date"], i["end_date"], color=getEmotionColor(i["emotion"]), alpha=0.2,label=i["emotion"])
+
+    ax2.plot(df1['close'],label="BTC-USDT")
+    ax2.set_title('BTC-USDT')
+    ax2.set_xlabel('Date')
+    ax2.set_ylabel('Price (USD)')
+    ax2.legend(loc="upper right")
+    ax1.legend()
+
+    for i in array:
+        if i["crypto_coin"]=="BTC":
+            ax2.axvspan(i["start_date"], i["end_date"], color=getEmotionColor(i["emotion"]), alpha=0.2,label=i["emotion"])
+
+    # Show the plot
+    plt.show()
 
 
-# start_date = pd.Timestamp('2022-03-25')
-# end_date = pd.Timestamp('2023-03-25')
-start_date = datetime.datetime(2022, 1, 1)
-end_date = datetime.datetime(2022, 5, 1)
-delta = pd.Timedelta('1 day')
-dates = pd.date_range(start_date, end_date, freq=delta).to_pydatetime().tolist()
+# main
 
-# print(public_client.get_product_historic_rates("BTC-USD"));
+array=[
+    {
+        "start_date":'2022-01-10',
+        "end_date":'2022-03-15',
+        "emotion":"Happy",
+        "crypto_coin":"BTC"
 
-df = pd.DataFrame(public_client.get_product_historic_rates(
-    'ETH-USDT',start=start_date,end=end_date,granularity=86400
-))
+    },
+    {
+        "start_date":'2022-03-20',
+        "end_date":'2022-04-15',
+        "emotion":"Sad",
+        "crypto_coin":"ETH"
+    },
+    {
+        "start_date":'2022-01-20',
+        "end_date":'2022-02-15',
+        "emotion":"Happy",
+        "crypto_coin":"ETH"
+    },
+]
 
-# df = pd.DataFrame(public_client.get_product_historic_rates(
-#     'BTC-USD', 
-#     start_date, 
-#     end_date,
-#     granularity=86400  # 1 day
-# ))
-
-
-df.columns = ['time', 'low', 'high', 'open', 'close', 'volume']
-
-df['time'] = pd.to_datetime(df['time'], unit='s')
-df = df.set_index('time')
-
-df1 = pd.DataFrame(public_client.get_product_historic_rates(
-    'BTC-USDT',start=start_date,end=end_date,granularity=86400
-))
-
-# df1 = pd.DataFrame(public_client.get_product_historic_rates(
-#     'BTC-USD', 
-#     start_date, 
-#     end_date,
-#     granularity=86400  # 1 day
-# ))
-
-
-df1.columns = ['time', 'low', 'high', 'open', 'close', 'volume']
-
-df1['time'] = pd.to_datetime(df1['time'], unit='s')
-df1 = df1.set_index('time')
-
-
-# Set the start and end dates for the time range to highlight
-start_date = '2022-01-10'
-end_date = '2022-03-15'
-
-start_date1 = '2022-03-20'
-end_date1 = '2022-04-15'
-
-# Create a figure and an axis object
-fig, ax = plt.subplots(figsize=(12,6))
-
-# Plot the data on the axis object
-ax.plot(df['close'])
-ax.set_title('ETH-USDT')
-ax.set_xlabel('Date')
-ax.set_ylabel('Price (USD)')
-
-# Use axvspan() to highlight the time range
-ax.axvspan(start_date, end_date, color='green', alpha=0.2,label="Happy")
-ax.axvspan(start_date1, end_date1, color='blue', alpha=0.2,label="Sad")
-
-ax.legend()
-
-# Show the plot
-plt.show()
+df,df1=getCryptoData()
+getEmotionsChart(df,df1,array)
