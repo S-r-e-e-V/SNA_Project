@@ -56,11 +56,6 @@ def getEmotionsChart(df,df1,array):
     ax1.set_xlabel('Date')
     ax1.set_ylabel('Price (USD)')
     ax1.tick_params(axis='x', rotation=45)
-    ax1.legend(loc="upper right")
-
-    for i in array:
-        if i["crypto_coin"]=="ETH":
-            ax1.axvspan(i["start_date"], i["end_date"], color=getEmotionColor(i["emotion"]), alpha=0.2,label=i["emotion"])
 
     ax2.plot(df1['close'],label="BTC-USD")
     ax2.set_title('BTC-USDT')
@@ -68,12 +63,13 @@ def getEmotionsChart(df,df1,array):
     ax2.set_ylabel('Price (USD)')
     ax2.tick_params(axis='x', rotation=45)
     ax2.legend(loc="upper right")
-    ax1.legend()
 
     for i in array:
-        if i["crypto_coin"]=="BTC":
-            ax2.axvspan(i["start_date"], i["end_date"], color=getEmotionColor(i["emotion"]), alpha=0.2,label=i["emotion"])
+        ax1.axvspan(i["start_date"], i["end_date"], color=getEmotionColor(i["emotion"]), alpha=0.2,label=i["emotion"])
+        ax2.axvspan(i["start_date"], i["end_date"], color=getEmotionColor(i["emotion"]), alpha=0.2,label=i["emotion"])
 
+    ax1.legend(loc="upper right")
+    ax1.legend()
     # Show the plot
     plt.show()
 
@@ -83,22 +79,19 @@ def getEmotionsChart(df,df1,array):
 array=[
     {
         "start_date":'2022-01-10',
-        "end_date":'2022-03-15',
+        "end_date":'2022-02-15',
         "emotion":"Happy",
-        "crypto_coin":"BTC"
 
     },
     {
-        "start_date":'2022-03-20',
-        "end_date":'2022-04-15',
+        "start_date":'2022-02-20',
+        "end_date":'2022-03-15',
         "emotion":"Sad",
-        "crypto_coin":"ETH"
     },
     {
-        "start_date":'2022-01-20',
-        "end_date":'2022-02-15',
+        "start_date":'2022-04-20',
+        "end_date":'2022-05-01',
         "emotion":"Happy",
-        "crypto_coin":"ETH"
     },
 ]
 
