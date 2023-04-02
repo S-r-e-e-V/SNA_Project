@@ -8,6 +8,8 @@ def getEmotionColor(string):
         return "green"
     elif string=="Sad":
         return "red"
+    else:
+        return "blue"
 
 def getCryptoData():
     public_client = cbpro.PublicClient()
