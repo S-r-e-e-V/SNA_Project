@@ -67,8 +67,8 @@ def getEmotionsChart(df,df1,array):
     ax2.legend(loc="upper right")
 
     for i in array:
-        ax1.axvspan(i["start_date"], i["end_date"], color=getEmotionColor(i["emotion"]), alpha=0.2,label=i["emotion"])
-        ax2.axvspan(i["start_date"], i["end_date"], color=getEmotionColor(i["emotion"]), alpha=0.2,label=i["emotion"])
+        ax1.axvspan(i["start_date"], i["end_date"], color=getEmotionColor(i["emotion"]), alpha=0.2)
+        ax2.axvspan(i["start_date"], i["end_date"], color=getEmotionColor(i["emotion"]), alpha=0.2)
 
     ax1.legend(loc="upper right")
     ax1.legend()
@@ -93,6 +93,11 @@ array=[
     {
         "start_date":'2022-04-20',
         "end_date":'2022-05-01',
+        "emotion":"Happy",
+    },
+    {
+        "start_date":'2022-03-15',
+        "end_date":'2022-03-20',
         "emotion":"Happy",
     },
 ]
