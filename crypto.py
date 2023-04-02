@@ -8,7 +8,6 @@ def getEmotionColor(string):
         return "green"
     elif string=="Sad":
         return "red"
-        
 
 def getCryptoData():
     public_client = cbpro.PublicClient()
@@ -49,24 +48,25 @@ def getCryptoData():
 def getEmotionsChart(df,df1,array):
 
     # Create a figure and an axis object
-    fig, (ax1,ax2) = plt.subplots(1,2,figsize=(25,6), sharex=True)
+    fig, (ax1,ax2) = plt.subplots(1,2,figsize=(20,6), sharex=True)
 
     # Plot the data on the axis object
     ax1.plot(df['close'])
-    ax1.set_title('ETH-USDT')
+    ax1.set_title('ETH-USD')
     ax1.set_xlabel('Date')
     ax1.set_ylabel('Price (USD)')
-    # ax1.set_xticklabels(df['Date'], rotation=45)
+    ax1.tick_params(axis='x', rotation=45)
     ax1.legend(loc="upper right")
 
     for i in array:
         if i["crypto_coin"]=="ETH":
             ax1.axvspan(i["start_date"], i["end_date"], color=getEmotionColor(i["emotion"]), alpha=0.2,label=i["emotion"])
 
-    ax2.plot(df1['close'],label="BTC-USDT")
+    ax2.plot(df1['close'],label="BTC-USD")
     ax2.set_title('BTC-USDT')
     ax2.set_xlabel('Date')
     ax2.set_ylabel('Price (USD)')
+    ax2.tick_params(axis='x', rotation=45)
     ax2.legend(loc="upper right")
     ax1.legend()
 
