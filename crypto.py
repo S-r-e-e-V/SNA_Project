@@ -60,18 +60,21 @@ def getEmotionsChart(df,df1,array):
     ax1.tick_params(axis='x', rotation=45)
 
     ax2.plot(df1['close'],label="BTC-USD")
-    ax2.set_title('BTC-USDT')
+    ax2.set_title('BTC-USD')
     ax2.set_xlabel('Date')
     ax2.set_ylabel('Price (USD)')
     ax2.tick_params(axis='x', rotation=45)
-    ax2.legend(loc="upper right")
+    
 
     for i in array:
         ax1.axvspan(i["start_date"], i["end_date"], color=getEmotionColor(i["emotion"]), alpha=0.2)
         ax2.axvspan(i["start_date"], i["end_date"], color=getEmotionColor(i["emotion"]), alpha=0.2)
 
-    ax1.legend(loc="upper right")
-    ax1.legend()
+    # Add a legend to ax1
+    ax1.legend(['ETH-USD', 'Happy','Sad'], loc="upper right")
+    
+    # Add a legend to ax2
+    ax2.legend(['BTC-USD', 'Happy','Sad'], loc="upper right")
     # Show the plot
     plt.show()
 
